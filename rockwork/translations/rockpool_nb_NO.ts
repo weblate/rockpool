@@ -463,7 +463,7 @@
     <message>
         <location filename="../qml/pages/ImportPackagePage.qml" line="161"/>
         <source>Sideloading file</source>
-        <translation type="unfinished">Sideinnlaster fil</translation>
+        <translation>Sideinnlaster fil</translation>
     </message>
 </context>
 <context>
@@ -471,22 +471,22 @@
     <message>
         <location filename="../qml/pages/InfoPage.qml" line="29"/>
         <source>Version %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Versjon %1</translation>
     </message>
     <message>
         <location filename="../qml/pages/InfoPage.qml" line="42"/>
         <source>Legal</source>
-        <translation type="unfinished"></translation>
+        <translation>Juridisk</translation>
     </message>
     <message>
         <location filename="../qml/pages/InfoPage.qml" line="80"/>
         <source>This application is neither affiliated with nor endorsed by Pebble Technology Corp.</source>
-        <translation type="unfinished"></translation>
+        <translation>Denne applikasjonen er verken tilknyttet eller støttet av Pebble Technology Corp.</translation>
     </message>
     <message>
         <location filename="../qml/pages/InfoPage.qml" line="90"/>
         <source>Pebble is a trademark of Pebble Technology Corp.</source>
-        <translation type="unfinished"></translation>
+        <translation>Pebble er et varemerke eid av Pebble Technology Corp.</translation>
     </message>
 </context>
 <context>
