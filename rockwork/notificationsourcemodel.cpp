@@ -28,6 +28,10 @@ QVariant NotificationSourceModel::data(const QModelIndex &index, int role) const
         return item.m_id;
     case RoleIcon:
         return item.m_icon;
+    case RoleColorName:
+        return item.m_colorName;
+    case RoleIconCode:
+        return item.m_iconCode;
     }
     return QVariant();
 }
@@ -39,6 +43,8 @@ QHash<int, QByteArray> NotificationSourceModel::roleNames() const
     roles.insert(RoleEnabled, "enabled");
     roles.insert(RoleIcon, "icon");
     roles.insert(RoleId, "id");
+    roles.insert(RoleColorName, "colorName");
+    roles.insert(RoleIconCode, "iconCode");
     return roles;
 }
 
@@ -68,6 +74,18 @@ void NotificationSourceModel::insert(const QString &sourceId, const QString &nam
         item.m_enabled = enabled;
         m_sources.append(item);
         endInsertRows();
+    }
+}
+
+void NotificationSourceModel::setAppearance(const QString &sourceId, const QString &colorName, const QString &iconCode)
+{
+    for (int i = 0; i < m_sources.count(); i++) {
+        if (m_sources.at(i).m_id == sourceId) {
+            m_sources[i].m_colorName = colorName;
+            m_sources[i].m_iconCode = iconCode;
+            emit dataChanged(index(i), index(i), {RoleColorName, RoleIconCode});
+            return;
+        }
     }
 }
 

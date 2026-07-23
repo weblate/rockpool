@@ -83,7 +83,14 @@ bool ServiceControl::stopService()
 
 bool ServiceControl::restartService()
 {
-    return stopService() && startService();
+    // Ask systemd (--user) to restart the unit in one step. Unlike the old stop+start this
+    // leaves the enable/disable state alone and starts the unit if it wasn't running.
+    QDBusReply<QDBusObjectPath> reply = systemd->call("RestartUnit", ROCKPOOLD_SYSTEMD_UNIT, "replace");
+    if (!reply.isValid()) {
+        qWarning() << reply.error().message();
+        return false;
+    }
+    return true;
 }
 
 void ServiceControl::getUnitProperties()

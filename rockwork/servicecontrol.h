@@ -4,7 +4,7 @@
 #include <QDBusInterface>
 #include <QObject>
 
-static const QString ROCKPOOLD_SYSTEMD_UNIT("rockpoold.service");
+static const QString ROCKPOOLD_SYSTEMD_UNIT("libpebble3d.service");
 
 class ServiceControl : public QObject
 {

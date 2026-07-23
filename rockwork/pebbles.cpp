@@ -18,10 +18,14 @@ Pebbles::Pebbles(QObject *parent):
     refresh();
     m_watcher = new QDBusServiceWatcher(ROCKWORK_SERVICE, QDBusConnection::sessionBus(), QDBusServiceWatcher::WatchForOwnerChange, this);
     QDBusConnection::sessionBus().connect(ROCKWORK_SERVICE, ROCKWORK_MANAGER_PATH, ROCKWORK_MANAGER_INTERFACE, "PebblesChanged", this, SLOT(refresh()));
+    QDBusConnection::sessionBus().connect(ROCKWORK_SERVICE, ROCKWORK_MANAGER_PATH, ROCKWORK_MANAGER_INTERFACE, "ScanningChanged", this, SLOT(onScanningChanged(bool)));
+    QDBusConnection::sessionBus().connect(ROCKWORK_SERVICE, ROCKWORK_MANAGER_PATH, ROCKWORK_MANAGER_INTERFACE, "ScanResultsChanged", this, SLOT(refreshScanResults()));
     connect(m_watcher, &QDBusServiceWatcher::serviceRegistered, [this]() {
         qDebug() << "service Registered!";
         refresh();
         QDBusConnection::sessionBus().connect(ROCKWORK_SERVICE, ROCKWORK_MANAGER_PATH, ROCKWORK_MANAGER_INTERFACE, "PebblesChanged", this, SLOT(refresh()));
+        QDBusConnection::sessionBus().connect(ROCKWORK_SERVICE, ROCKWORK_MANAGER_PATH, ROCKWORK_MANAGER_INTERFACE, "ScanningChanged", this, SLOT(onScanningChanged(bool)));
+        QDBusConnection::sessionBus().connect(ROCKWORK_SERVICE, ROCKWORK_MANAGER_PATH, ROCKWORK_MANAGER_INTERFACE, "ScanResultsChanged", this, SLOT(refreshScanResults()));
     });
     connect(m_watcher, &QDBusServiceWatcher::serviceUnregistered, [this]() {
         qDebug() << "service Unregistered!";
@@ -31,6 +35,9 @@ Pebbles::Pebbles(QObject *parent):
         endResetModel();
         m_connectedToService = false;
         emit connectedToServiceChanged();
+        onScanningChanged(false);
+        m_scanResults.clear();
+        emit scanResultsChanged();
     });
 }
 
@@ -51,6 +58,8 @@ QVariant Pebbles::data(const QModelIndex &index, int role) const
         return m_pebbles.at(index.row())->serialNumber();
     case RoleConnected:
         return m_pebbles.at(index.row())->connected();
+    case RoleConnectionState:
+        return m_pebbles.at(index.row())->connectionState();
     }
 
     return QVariant();
@@ -63,6 +72,7 @@ QHash<int, QByteArray> Pebbles::roleNames() const
     roles.insert(RoleName, "name");
     roles.insert(RoleSerialNumber, "serialNumber");
     roles.insert(RoleConnected, "connected");
+    roles.insert(RoleConnectionState, "connectionState");
     return roles;
 }
 
@@ -134,6 +144,7 @@ void Pebbles::refresh()
         if (find(p) == -1) {
             Pebble *pebble = new Pebble(p, this);
             connect(pebble, &Pebble::connectedChanged, this, &Pebbles::pebbleConnectedChanged);
+            connect(pebble, &Pebble::connectionStateChanged, this, &Pebbles::pebbleConnectedChanged);
             beginInsertRows(QModelIndex(), m_pebbles.count(), m_pebbles.count());
             m_pebbles.append(pebble);
             endInsertRows();
@@ -189,7 +200,7 @@ bool Pebbles::sortPebbles(Pebble *a, Pebble *b)
 void Pebbles::pebbleConnectedChanged()
 {
     Pebble *pebble = static_cast<Pebble*>(sender());
-    emit dataChanged(index(find(pebble->address())), index(find(pebble->address())), {RoleConnected});
+    emit dataChanged(index(find(pebble->address())), index(find(pebble->address())), {RoleConnected, RoleConnectionState});
 }
 
 int Pebbles::find(const QDBusObjectPath &path) const
@@ -200,4 +211,85 @@ int Pebbles::find(const QDBusObjectPath &path) const
         }
     }
     return -1;
+}
+
+bool Pebbles::scanning() const
+{
+    return m_scanning;
+}
+
+QVariantList Pebbles::scanResults() const
+{
+    return m_scanResults;
+}
+
+void Pebbles::startScan()
+{
+    QDBusInterface iface(ROCKWORK_SERVICE, ROCKWORK_MANAGER_PATH, ROCKWORK_MANAGER_INTERFACE);
+    iface.call("StartScan");
+}
+
+void Pebbles::stopScan()
+{
+    QDBusInterface iface(ROCKWORK_SERVICE, ROCKWORK_MANAGER_PATH, ROCKWORK_MANAGER_INTERFACE);
+    iface.call("StopScan");
+}
+
+void Pebbles::connectWatch(const QString &address)
+{
+    QDBusInterface iface(ROCKWORK_SERVICE, ROCKWORK_MANAGER_PATH, ROCKWORK_MANAGER_INTERFACE);
+    iface.call("ConnectWatch", address);
+}
+
+void Pebbles::disconnectWatch(const QString &address)
+{
+    QDBusInterface iface(ROCKWORK_SERVICE, ROCKWORK_MANAGER_PATH, ROCKWORK_MANAGER_INTERFACE);
+    iface.call("DisconnectWatch", address);
+}
+
+void Pebbles::forgetWatch(const QString &address)
+{
+    QDBusInterface iface(ROCKWORK_SERVICE, ROCKWORK_MANAGER_PATH, ROCKWORK_MANAGER_INTERFACE);
+    iface.call("ForgetWatch", address);
+    // The daemon emits PebblesChanged once the watch is gone; the model refreshes from that.
+}
+
+void Pebbles::onScanningChanged(bool scanning)
+{
+    if (m_scanning != scanning) {
+        m_scanning = scanning;
+        emit scanningChanged();
+    }
+}
+
+void Pebbles::refreshScanResults()
+{
+    QDBusInterface iface(ROCKWORK_SERVICE, ROCKWORK_MANAGER_PATH, ROCKWORK_MANAGER_INTERFACE);
+    QDBusMessage reply = iface.call("ScanResults");
+    if (reply.type() == QDBusMessage::ErrorMessage || reply.arguments().count() == 0) {
+        qWarning() << "Error fetching scan results:" << reply.errorMessage();
+        return;
+    }
+
+    QVariantList results;
+    const QDBusArgument &arg = reply.arguments().first().value<QDBusArgument>();
+    arg.beginArray();
+    while (!arg.atEnd()) {
+        QVariant mapEntryVariant;
+        arg >> mapEntryVariant;
+        // 'av' elements arrive as QDBusArgument (a{sv} inside the variant); tolerate
+        // plain aa{sv} too, where Qt hands us a ready QVariantMap.
+        QVariantMap resultMap;
+        if (mapEntryVariant.userType() == qMetaTypeId<QDBusArgument>()) {
+            QDBusArgument mapEntry = mapEntryVariant.value<QDBusArgument>();
+            mapEntry >> resultMap;
+        } else {
+            resultMap = mapEntryVariant.toMap();
+        }
+        results.append(resultMap);
+    }
+    arg.endArray();
+
+    m_scanResults = results;
+    emit scanResultsChanged();
 }

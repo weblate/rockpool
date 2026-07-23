@@ -21,7 +21,7 @@ Page {
         }
         Button {
             text: qsTr("Restart Service")
-            onClicked: rockPool.initService()
+            onClicked: rockPool.restartService()
             width: parent.width
         }
     }

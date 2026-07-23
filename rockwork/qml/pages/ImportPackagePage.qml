@@ -12,7 +12,7 @@ Page {
     allowedOrientations: Orientation.Portrait
 
     property alias path: fileModel.path
-    property string homePath: '/home/nemo'
+    property string homePath: StandardPaths.home
     property string title
     property bool showFormat
 

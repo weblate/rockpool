@@ -1,0 +1,4 @@
+[submodule "libpebble3d/mobileapp"]
+	url = https://github.com/jplexer/libpebble3.git
+	branch = hack-sfos-claude
+	path = libpebble3d/mobileapp

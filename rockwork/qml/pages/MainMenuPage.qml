@@ -16,6 +16,15 @@ Page {
     SilicaFlickable {
         PullDownMenu {
             MenuItem {
+                // With a single watch, rockpool.qml pushes this page straight onto a cleared
+                // stack, so the watch list is otherwise unreachable — and with it, pairing and
+                // forgetting.
+                text: qsTr("Watch manager")
+                onClicked: {
+                    pageStack.push(Qt.resolvedUrl("PebblesPage.qml"))
+                }
+            }
+            MenuItem {
                 text: qsTr("About")
                 onClicked: {
                     pageStack.push(Qt.resolvedUrl("InfoPage.qml"))
@@ -169,20 +178,13 @@ Page {
                     width: parent.width / parent.columns - Theme.paddingSmall
                     spacing: menuRepeater.count > 0 ? 0 : Theme.paddingSmall
                     Label {
-                        text: qsTr("Your Pebble smartwatch is disconnected. Please make sure it is powered on, within range and it is paired properly in the Bluetooth System Settings.")
+                        text: qsTr("Your Pebble smartwatch is disconnected. Please make sure it is powered on and within range.")
                         width: parent.width
                         anchors.horizontalCenter: parent.horizontalCenter
                         wrapMode: Text.WordWrap
                         visible: !root.pebble.connected
                         font.pixelSize: Theme.fontSizeLarge
                         horizontalAlignment: Text.AlignHCenter
-                    }
-
-                    Button {
-                        text: qsTr("Open Bluetooth Settings")
-                        visible: !root.pebble.connected
-                        onClicked: rockPool.startBT()
-                        anchors.horizontalCenter: parent.horizontalCenter
                     }
 
                     Label {

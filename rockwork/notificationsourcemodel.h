@@ -10,6 +10,10 @@ public:
     QString m_displayName;
     QString m_icon;
     int m_enabled = 0;
+    // Per-app appearance overrides (empty = use the watch's resolved default).
+    // m_colorName is a TimelineColor.name, m_iconCode a TimelineIcon.code.
+    QString m_colorName;
+    QString m_iconCode;
 
     bool operator ==(const NotificationSourceItem &other) {
         return m_id == other.m_id;
@@ -25,7 +29,9 @@ public:
         RoleName,
         RoleEnabled,
         RoleIcon,
-        RoleId
+        RoleId,
+        RoleColorName,
+        RoleIconCode
     };
 
     explicit NotificationSourceModel(QObject *parent = 0);
@@ -35,6 +41,9 @@ public:
     QHash<int, QByteArray> roleNames() const override;
 
     void insert(const QString &sourceId, const QString &name, const QString &icon, const int enabled);
+    // Update only the appearance override of an existing entry (no-op if unknown). Kept separate
+    // from insert() because the NotificationFilterChanged signal path carries no colour/icon.
+    void setAppearance(const QString &sourceId, const QString &colorName, const QString &iconCode);
 
 signals:
     void countChanged();

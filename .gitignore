@@ -5,3 +5,8 @@ qrc_*.cpp
 *.qm
 /build
 /*.list
+
+# Build outputs / debug artifacts
+/RPMS/
+*.log
+*.btsnoop

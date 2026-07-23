@@ -1,0 +1,13 @@
+[Unit]
+Description=Pebble daemon (libpebble3 native image)
+Requires=dbus.socket
+After=dbus.socket
+Conflicts=rockpoold.service pebbled.service
+
+[Service]
+ExecStart=/usr/libexec/libpebble3d/libpebble3d
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=user-session.target

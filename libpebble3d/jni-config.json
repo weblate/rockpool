@@ -1,0 +1,8 @@
+[
+  {"name": "androidx.sqlite.driver.bundled.BundledSQLiteDriverKt", "allDeclaredMethods": true, "allDeclaredFields": true, "allDeclaredConstructors": true},
+  {"name": "androidx.sqlite.driver.bundled.BundledSQLiteConnectionKt", "allDeclaredMethods": true, "allDeclaredFields": true, "allDeclaredConstructors": true},
+  {"name": "androidx.sqlite.driver.bundled.BundledSQLiteStatementKt", "allDeclaredMethods": true, "allDeclaredFields": true, "allDeclaredConstructors": true},
+  {"name": "androidx.sqlite.driver.bundled.BundledSQLite", "allDeclaredMethods": true, "allDeclaredFields": true, "allDeclaredConstructors": true},
+  {"name": "androidx.sqlite.SQLiteException", "allDeclaredMethods": true, "allDeclaredConstructors": true},
+  {"name": "java.lang.OutOfMemoryError", "allDeclaredMethods": true, "allDeclaredConstructors": true}
+]

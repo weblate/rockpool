@@ -1,0 +1,212 @@
+[
+  {
+    "interfaces": [
+      "org.bluez.Adapter1"
+    ]
+  },
+  {
+    "interfaces": [
+      "org.bluez.Agent1"
+    ]
+  },
+  {
+    "interfaces": [
+      "org.bluez.AgentManager1"
+    ]
+  },
+  {
+    "interfaces": [
+      "org.bluez.Battery1"
+    ]
+  },
+  {
+    "interfaces": [
+      "org.bluez.Device1"
+    ]
+  },
+  {
+    "interfaces": [
+      "org.bluez.GattCharacteristic1"
+    ]
+  },
+  {
+    "interfaces": [
+      "org.bluez.GattDescriptor1"
+    ]
+  },
+  {
+    "interfaces": [
+      "org.bluez.GattManager1"
+    ]
+  },
+  {
+    "interfaces": [
+      "org.bluez.GattProfile1"
+    ]
+  },
+  {
+    "interfaces": [
+      "org.bluez.GattService1"
+    ]
+  },
+  {
+    "interfaces": [
+      "org.bluez.HealthChannel1"
+    ]
+  },
+  {
+    "interfaces": [
+      "org.bluez.HealthDevice1"
+    ]
+  },
+  {
+    "interfaces": [
+      "org.bluez.HealthManager1"
+    ]
+  },
+  {
+    "interfaces": [
+      "org.bluez.Input1"
+    ]
+  },
+  {
+    "interfaces": [
+      "org.bluez.LEAdvertisement1"
+    ]
+  },
+  {
+    "interfaces": [
+      "org.bluez.LEAdvertisingManager1"
+    ]
+  },
+  {
+    "interfaces": [
+      "org.bluez.Media1"
+    ]
+  },
+  {
+    "interfaces": [
+      "org.bluez.MediaControl1"
+    ]
+  },
+  {
+    "interfaces": [
+      "org.bluez.MediaEndpoint1"
+    ]
+  },
+  {
+    "interfaces": [
+      "org.bluez.MediaFolder1"
+    ]
+  },
+  {
+    "interfaces": [
+      "org.bluez.MediaItem1"
+    ]
+  },
+  {
+    "interfaces": [
+      "org.bluez.MediaPlayer1"
+    ]
+  },
+  {
+    "interfaces": [
+      "org.bluez.MediaTransport1"
+    ]
+  },
+  {
+    "interfaces": [
+      "org.bluez.Network1"
+    ]
+  },
+  {
+    "interfaces": [
+      "org.bluez.NetworkServer1"
+    ]
+  },
+  {
+    "interfaces": [
+      "org.bluez.Profile1"
+    ]
+  },
+  {
+    "interfaces": [
+      "org.bluez.ProfileManager1"
+    ]
+  },
+  {
+    "interfaces": [
+      "org.bluez.SimAccess1"
+    ]
+  },
+  {
+    "interfaces": [
+      "org.bluez.Thermometer1"
+    ]
+  },
+  {
+    "interfaces": [
+      "org.bluez.ThermometerManager1"
+    ]
+  },
+  {
+    "interfaces": [
+      "org.bluez.ThermometerWatcher1"
+    ]
+  },
+  {
+    "interfaces": [
+      "org.freedesktop.dbus.interfaces.Properties"
+    ]
+  },
+  {
+    "interfaces": [
+      "org.freedesktop.dbus.interfaces.ObjectManager"
+    ]
+  },
+  {
+    "interfaces": [
+      "org.freedesktop.dbus.interfaces.Introspectable"
+    ]
+  },
+  {
+    "interfaces": [
+      "org.freedesktop.dbus.interfaces.Peer"
+    ]
+  },
+  {
+    "interfaces": [
+      "org.freedesktop.dbus.interfaces.DBus"
+    ]
+  },
+  {
+    "interfaces": [
+      "org.freedesktop.dbus.interfaces.DBusInterface"
+    ]
+  },
+  {
+    "interfaces": [
+      "io.rebble.libpebblecommon.linux.music.MprisPlayer"
+    ]
+  },
+  {
+    "interfaces": [
+      "io.rebble.libpebblecommon.sailfish.calls.VoiceCallIface"
+    ]
+  },
+  {
+    "interfaces": [
+      "io.rebble.libpebblecommon.sailfish.calls.VoiceCallManagerIface"
+    ]
+  },
+  {
+    "interfaces": [
+      "io.rebble.libpebblecommon.sailfish.location.GeoclueProvider"
+    ]
+  },
+  {
+    "interfaces": [
+      "io.rebble.libpebblecommon.sailfish.location.GeocluePosition"
+    ]
+  }
+]

@@ -5,6 +5,17 @@ Page {
     id: root
 
     property var pebble: null
+    // TimelineColor.name -> "#RRGGBB", so the list can show a swatch for an app's colour override
+    // without each delegate re-querying the daemon. Filled once from the same palette the picker uses.
+    property var colorMap: ({})
+
+    Component.onCompleted: {
+        var colors = root.pebble.timelineColors();
+        var map = {};
+        for (var i = 0; i < colors.length; i++)
+            map[colors[i].name] = colors[i].rgb;
+        root.colorMap = map;
+    }
 
     SilicaListView {
         anchors.fill: parent
@@ -55,6 +66,31 @@ Page {
                 Label {
                     text: model.name
                     anchors.verticalCenter: parent.verticalCenter
+                    width: parent.width - x - Theme.itemSizeSmall
+                    truncationMode: TruncationMode.Fade
+                }
+            }
+            // Appearance-override indicators, right-aligned: a colour swatch and/or an icon glyph.
+            Row {
+                anchors.verticalCenter: parent.verticalCenter
+                anchors.right: parent.right
+                anchors.rightMargin: Theme.horizontalPageMargin
+                spacing: Theme.paddingMedium
+                Rectangle {
+                    anchors.verticalCenter: parent.verticalCenter
+                    width: Theme.iconSizeSmall / 2
+                    height: width
+                    radius: width / 2
+                    visible: model.colorName !== "" && root.colorMap[model.colorName] !== undefined
+                    color: visible ? root.colorMap[model.colorName] : "transparent"
+                    border.width: 1
+                    border.color: Theme.rgba(Theme.primaryColor, 0.4)
+                }
+                Icon {
+                    anchors.verticalCenter: parent.verticalCenter
+                    source: "image://theme/icon-s-installed"
+                    visible: model.iconCode !== ""
+                    opacity: 0.6
                 }
             }
             onClicked: showMenu()
@@ -76,6 +112,24 @@ Page {
                     onClicked: root.pebble.setNotificationFilter(model.id, 0)
                     highlighted: !enabled
                     enabled: model.enabled !== 0
+                }
+                MenuItem {
+                    text: qsTr("Colour…")
+                    onClicked: pageStack.push(Qt.resolvedUrl("NotificationColorPage.qml"), {
+                                                  pebble: root.pebble,
+                                                  sourceId: model.id,
+                                                  appName: model.name,
+                                                  currentColor: model.colorName
+                                              })
+                }
+                MenuItem {
+                    text: qsTr("Icon…")
+                    onClicked: pageStack.push(Qt.resolvedUrl("NotificationIconPage.qml"), {
+                                                  pebble: root.pebble,
+                                                  sourceId: model.id,
+                                                  appName: model.name,
+                                                  currentIcon: model.iconCode
+                                              })
                 }
                 MenuItem {
                     text: qsTr("Forget")

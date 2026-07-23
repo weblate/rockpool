@@ -1,0 +1,4 @@
+out/
+RPMS/
+daemon/build/
+daemon/.gradle/
